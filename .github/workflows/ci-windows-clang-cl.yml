@@ -1,0 +1,83 @@
+# SPDX-FileCopyrightText: 2022 - 2024 Peter Urban, Ghent University
+#
+# SPDX-License-Identifier: CC0-1.0
+
+name: CI-openmp-windows-clang-cl
+
+on:
+  push:
+    branches: [ main ]
+    paths-ignore: ['*-linux-gcc.yml', '*-macos-clang.yml', '*-windows-msvc.yml']
+    
+  pull_request:
+    branches: [ main ]
+    paths-ignore: ['*-linux-gcc.yml', '*-macos-clang.yml', '*-windows-msvc.yml']
+    
+  
+jobs:
+  windows:
+    name: ${{ matrix.os }} (${{matrix.compiler}}) (${{matrix.library_type}})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        library_type: [shared, static]
+        compiler: [clang-cl]         
+        #os: [windows-latest, windows-2019] #currently fails on windows-latest (2022)
+        os: [windows-2019]
+          
+    env:
+      CC: ${{matrix.compiler}}
+      CXX: ${{matrix.compiler}}
+
+    steps:
+    - name: setup python
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.11'
+
+    - name: Prepare MSVC
+      uses: bus1/cabuild/action/msdevshell@v1
+      with:
+        architecture: x64
+      
+    # - name: Set up Clang
+    #   uses: egor-tensin/setup-clang@v1
+    #   with:
+    #     version: latest
+
+    # - uses: actions4cpp/setup-llvm@v1
+    #   with:
+    #     llvm-version: "17"
+    
+    # make sure meson can find msvc
+    - uses: TheMrMilchmann/setup-msvc-dev@v3
+      with:
+        arch: x64
+
+    - name: checkout main repository
+      uses: actions/checkout@v3
+      with:
+        submodules: recursive
+        lfs: false
+
+    - name: install dependencies (meson & python)
+      run: pip install meson ninja
+
+    # - name: install custom meson
+    #   run: |
+    #     git clone https://github.com/peter-urban/meson.git; cd meson; git checkout fix-openmp-dependency-for-clang-cl; pip install .; meson --version
+
+    - name: check ninja version
+      run: |
+        ninja --version
+
+    - name: configure meson
+      run: meson setup builddir/; meson configure builddir -Dprefix=/usr/ --default-library=${{matrix.library_type}}
+
+    - name: compile project
+      run: meson compile -C builddir/
+
+    - name: test (cpp)
+      run: meson test -C builddir/ --print-errorlogs 
+

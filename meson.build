@@ -18,11 +18,11 @@ project(
 demolib_compile_args = []
 
 if meson.get_compiler('cpp').get_id() != 'msvc'
-  demolib_compile_args = ['-Werror=unknown-pragmas']  
+  demolib_compile_args += ['-Werror=unknown-pragmas']  
 endif
 
 # openmp
-openmp = dependency('openmp')
+openmp = dependency('openmp', static: true)
 
 # pybind11
 pymod = import('python').find_installation(get_option('python_path'), pure: false)

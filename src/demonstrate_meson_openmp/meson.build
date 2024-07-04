@@ -86,7 +86,6 @@ py_tools = pymod.extension_module(
         openmp,
         pybind11_dep,
         python3_dep],
-    #link_with : [tools],
     link_language: 'cpp',
     cpp_args: ['-DMODULE_NAME='+modulename_library, '-DMODULE_VERSION=' + '"' + meson.project_version() + '"'],
     install: true

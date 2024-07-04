@@ -52,7 +52,7 @@ jobs:
         lfs: false
 
     - name: install dependencies (meson & python)
-      run: pip install meson ninja pytest
+      run: pip install meson ninja pytest msvc-runtime==14.40.33807
 
     # - name: install custom meson
     #   run: |

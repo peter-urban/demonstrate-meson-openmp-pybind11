@@ -24,6 +24,10 @@ endif
 # openmp
 openmp = dependency('openmp', static: true)
 
+if meson.get_compiler('cpp').get_id() == 'clang-cl' or meson.get_compiler('cpp').get_id() == 'msvc'
+  demolib_compile_args += ['/openmp:llvm']  
+endif
+
 # pybind11
 pymod = import('python').find_installation(get_option('python_path'), pure: false)
 python3_dep = pymod.dependency()

@@ -3,8 +3,11 @@
 # SPDX-License-Identifier: CC0-1.0
 
 # -- library setup --
-libname   = 'demonstrate_meson_openmp'
-headerdir = 'demonstrate_meson_openmp'
+libname    = 'demonstrate_meson_openmp'
+headerdir  = 'demonstrate_meson_openmp'
+modulename_library = 'demonstrate_meson_openmp_using_library' 
+modulename_header_only = 'demonstrate_meson_openmp_header_only' 
+modulename_no_openmp = 'demonstrate_meson_no_openmp' 
 
 # -- source files (demo library with cpp source) --
 sources = [
@@ -43,6 +46,49 @@ demolib_dep = declare_dependency(
   include_directories : ['../']
   )
 
+# define python module
+py_tools = pymod.extension_module(
+    modulename_no_openmp,
+    sources: ['module_no_openmp.cpp'],
+    dependencies: [
+        pybind11_dep,
+        python3_dep],
+    include_directories: ['../'],
+    link_language: 'cpp',
+    cpp_args: ['-DMODULE_NAME='+modulename_no_openmp, '-DMODULE_VERSION=' + '"' + meson.project_version() + '"'],
+    install: true
+)
+
+header_only_args = demolib_compile_args
+header_only_args += ['-DMODULE_NAME='+modulename_header_only, '-DMODULE_VERSION=' + '"' + meson.project_version() + '"']
+# define python module
+py_tools = pymod.extension_module(
+    modulename_header_only,
+    sources: ['module_header_only.cpp'],
+    dependencies: [
+        openmp,
+        pybind11_dep,
+        python3_dep],
+    cpp_args: demolib_compile_args,
+    include_directories: ['../'],
+    link_language: 'cpp',
+    cpp_args: header_only_args,
+    install: true
+)
+
+# define python module
+py_tools = pymod.extension_module(
+    modulename_library,
+    sources: ['module_library.cpp'],
+    dependencies: [
+        demolib_dep,
+        pybind11_dep,
+        python3_dep],
+    #link_with : [tools],
+    link_language: 'cpp',
+    cpp_args: ['-DMODULE_NAME='+modulename_library, '-DMODULE_VERSION=' + '"' + meson.project_version() + '"'],
+    install: true
+)
 
 
 # -- installation setup --

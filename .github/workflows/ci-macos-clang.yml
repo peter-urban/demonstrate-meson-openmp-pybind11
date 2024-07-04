@@ -52,7 +52,7 @@ jobs:
     # install libomp
     - run: brew install libomp
             
-    - run: pip install meson ninja
+    - run: pip install meson ninja pytest
 
     # - name: install custom meson
     #   run: |
@@ -66,3 +66,9 @@ jobs:
 
     - name: test (cpp)
       run: meson test -C builddir/ --print-errorlogs
+
+    - name: install project
+      run: meson install -C builddir/
+
+    - name: test (pytest)
+      run: pytest -v

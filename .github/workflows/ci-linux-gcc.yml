@@ -47,7 +47,7 @@ jobs:
       run: sudo DEBIAN_FRONTEND=noninteractive apt-get install -y build-essential pkg-config python3-pip
       
     - name: install dependencies (meson & python)
-      run: pip install meson ninja ${{matrix.pip_command}}
+      run: pip install meson ninja pytest ${{matrix.pip_command}}
 
     # - name: install custom meson
     #   run: |
@@ -61,4 +61,10 @@ jobs:
 
     - name: test (cpp)
       run: meson test -C builddir/ --print-errorlogs
+
+    - name: install project
+      run: meson install -C builddir/
+
+    - name: test (pytest)
+      run: pytest -v
     

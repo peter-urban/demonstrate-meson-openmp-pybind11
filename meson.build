@@ -23,11 +23,11 @@ endif
 
 # openmp
 openmp = dependency('openmp')
-# if meson.get_compiler('cpp').get_id() == 'clang-cl'
-#   openmp = declare_dependency(
-#     compile_args: ['/openmp:experimental'],
-#   )
-# endif
+
+# pybind11
+pymod = import('python').find_installation(get_option('python_path'), pure: false)
+python3_dep = pymod.dependency()
+pybind11_dep = dependency('pybind11')
 
 # --- build targets ---
 

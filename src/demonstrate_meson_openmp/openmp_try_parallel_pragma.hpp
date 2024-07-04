@@ -35,7 +35,7 @@ inline bool openmp_parallel_pragma_is_working_in_header() {
 #pragma omp parallel for
   for (int i = 0; i < omp_max_threads; ++i) {
     std::cerr << "Hello from thread " << omp_get_thread_num() << std::endl;
-    thread_responses.at(omp_get_thread_num()) = 1;
+    thread_responses.at(omp_get_thread_num(i)) = 1;
     std::chrono::milliseconds duration(100);
     std::this_thread::sleep_for(duration);
   }

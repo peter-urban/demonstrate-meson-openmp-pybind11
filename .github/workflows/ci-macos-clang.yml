@@ -22,7 +22,10 @@ jobs:
       fail-fast: false
       matrix:
         library_type: [shared, static]
-        cxx_compiler: ["$(brew --prefix llvm@18)/bin/clang++"]            
+        cxx_compiler: ["$(brew --prefix llvm@18)/bin/clang++"] 
+        llvm: ["$(brew --prefix llvm@18)"]
+        boost: ["$(brew --prefix boost)"]
+        libomp: ["$(brew --prefix libomp)"]         
         os: [macos-14, macos-12]
     
     # env does not work here because is resolved as string and not command 
@@ -59,8 +62,8 @@ jobs:
     #     git clone https://github.com/peter-urban/meson.git; cd meson; git checkout fix-openmp-dependency-for-clang-cl; pip install .; meson --version
     
     - name: configure meson
-      run: meson setup builddir/ --default-library=${{matrix.library_type}} -D"python.install_env=auto"
-
+      run: CXX=${{ matrix.llvm }}/bin/clang++  LDFLAGS="-L${{ matrix.llvm }}/lib/c++ -L${{ matrix.llvm }}/lib -undefined dynamic_lookup -Wl,-no_fixup_chains -Wl,-dead_strip -Wl,-rpath, ${{ matrix.llvm }}/lib/c++" CPPFLAGS="-I${{ matrix.llvm }}/include meson setup builddir/ --default-library=${{matrix.library_type}} -D"python.install_env=auto"
+      
     - name: compile project
       run: meson compile -C builddir/
 

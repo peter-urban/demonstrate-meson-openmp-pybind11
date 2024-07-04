@@ -65,6 +65,8 @@ jobs:
     - name: install project
       run: meson install -C builddir/
 
+    - run: sudo ldconfig
+
     - name: test (pytest)
       run: pytest -v
     

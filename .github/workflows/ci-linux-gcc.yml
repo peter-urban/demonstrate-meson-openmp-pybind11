@@ -51,7 +51,7 @@ jobs:
 
     - name: install custom meson
       run: |
-        git clone https://github.com/mesonbuild/meson.git; cd meson; pip install .; meson --version
+        git clone https://github.com/mesonbuild/meson.git; cd meson; pip install . ${{matrix.pip_command}}; meson --version
         # git clone https://github.com/peter-urban/meson.git; cd meson; git checkout fix-openmp-dependency-for-clang-cl; pip install . ${{matrix.pip_command}}; meson --version
 
     - name: configure meson

@@ -25,7 +25,7 @@ endif
 openmp = dependency('openmp', static: true)
 
 if meson.get_compiler('cpp').get_id() == 'clang-cl' or meson.get_compiler('cpp').get_id() == 'msvc'
-  demolib_compile_args += ['/openmp:llvm']  
+  demolib_compile_args += ['/openmp:experimental']  
 endif
 
 # pybind11

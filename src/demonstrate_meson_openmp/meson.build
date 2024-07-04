@@ -83,7 +83,6 @@ py_tools = pymod.extension_module(
     sources: ['module_library.cpp'],
     dependencies: [
         demolib_dep,
-        openmp,
         pybind11_dep,
         python3_dep],
     link_language: 'cpp',

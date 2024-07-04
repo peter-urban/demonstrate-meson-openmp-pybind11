@@ -57,9 +57,10 @@ jobs:
             
     - run: pip install meson ninja pytest
 
-    # - name: install custom meson
-    #   run: |
-    #     git clone https://github.com/peter-urban/meson.git; cd meson; git checkout fix-openmp-dependency-for-clang-cl; pip install .; meson --version
+    - name: install custom meson
+      run: |
+        git clone https://github.com/mesonbuild/meson.git; cd meson; pip install .; meson --version
+        # git clone https://github.com/peter-urban/meson.git; cd meson; git checkout fix-openmp-dependency-for-clang-cl; pip install .; meson --version
     
     - name: configure meson
       run: CXX=${{ matrix.llvm }}/bin/clang++  LDFLAGS="-L${{ matrix.llvm }}/lib/c++ -L${{ matrix.llvm }}/lib -undefined dynamic_lookup -Wl,-no_fixup_chains -Wl,-dead_strip -Wl,-rpath, ${{ matrix.llvm }}/lib/c++" CPPFLAGS="-I${{ matrix.llvm }}/include" meson setup builddir/ --default-library=${{matrix.library_type}} -D"python.install_env=auto"

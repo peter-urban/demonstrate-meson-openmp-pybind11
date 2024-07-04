@@ -71,7 +71,7 @@ jobs:
       run: meson test -C builddir/ --print-errorlogs
 
     - name: install project
-      run: meson install -C builddir/
+      run: sudo meson install -C builddir/
 
     - name: test (pytest)
       run: pytest -v

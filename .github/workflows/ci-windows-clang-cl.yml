@@ -46,9 +46,7 @@ jobs:
     #   with:
     #     version: latest
 
-    # - uses: actions4cpp/setup-llvm@v1
-    #   with:
-    #     llvm-version: "17"
+    - uses: actions4cpp/setup-llvm@v1
     
     # make sure meson can find msvc
     - uses: TheMrMilchmann/setup-msvc-dev@v3

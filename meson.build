@@ -22,7 +22,7 @@ if meson.get_compiler('cpp').get_id() != 'msvc'
 endif
 
 # openmp
-openmp = dependency('openmp')
+openmp = dependency('openmp', static: true)
 
 # pybind11
 pymod = import('python').find_installation(get_option('python_path'), pure: false)

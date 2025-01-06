@@ -22,13 +22,8 @@ jobs:
       fail-fast: false
       matrix:
         library_type: [shared, static]
-        cxx_compiler: ["$(brew --prefix llvm@18)/bin/clang++"] 
-        libomp: ["$(brew --prefix libomp)"]         
+        llvm: [llvm@18, llvm@19]                    
         os: [macos-15]
-    
-    # env does not work here because is resolved as string and not command 
-    # env:
-    #   CXX: ${{ matrix.cxx_compiler }}
       
     steps:
     
@@ -47,14 +42,21 @@ jobs:
       with:
         key: super-ci-mac  # name for the cache
         
-    - run: brew install libomp boost coreutils llvm@18
+    # install clang
+    - run: brew install coreutils ${{ matrix.llvm }}
+
+    # install libomp
+    - run: brew install libomp
     
     - run: pip install meson meson-python ninja pytest numpy
 
     - name: configure meson
       run: |
-        meson setup builddir -Dpython.install_env=auto
-      
+        CXX=$(brew --prefix ${{ matrix.llvm }})/bin/clang++  \
+        LDFLAGS="-L/opt/homebrew/opt/libomp/lib" \
+        CPPFLAGS="-I/opt/homebrew/opt/libomp/include" \
+        meson setup builddir/ --default-library=${{matrix.library_type}} -Dpython.install_env=auto
+
     - name: compile project
       run: meson compile -C builddir/
 

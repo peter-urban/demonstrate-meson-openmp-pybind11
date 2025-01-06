@@ -22,7 +22,7 @@ if meson.get_compiler('cpp').get_id() != 'msvc'
 endif
 
 # openmp
-openmp = dependency('openmp', static: true)
+openmp = dependency('openmp')
 
 # pybind11
 pymod = import('python').find_installation(get_option('python_path'), pure: false)
@@ -37,7 +37,7 @@ subdir('src')
 
 # -- tests (catch2) --
 if get_option('build_tests').enabled()
-    catch2 = subproject('catch2', default_options: ['tests=false'])
+    catch2 = subproject('catch2', default_options: ['tests=false', 'install=false'])
     catch2 = catch2.get_variable('catch2_with_main_dep')
 
     subdir('tests')

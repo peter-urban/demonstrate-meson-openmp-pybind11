@@ -47,19 +47,10 @@ jobs:
       with:
         key: super-ci-mac  # name for the cache
         
-    # install clang 18
-    - run: brew install coreutils llvm@18
-
-    # install libomp
-    - run: brew install libomp
-            
-    - run: pip install meson ninja pytest
-
-    - name: install custom meson
-      run: |
-        git clone https://github.com/mesonbuild/meson.git; cd meson; pip install .; meson --version
-        # git clone https://github.com/peter-urban/meson.git; cd meson; git checkout fix-openmp-dependency-for-clang-cl; pip install .; meson --version
+    - run: brew install libomp boost coreutils llvm@18
     
+    - run: pip install meson meson-python ninja pytest numpy
+
     - name: configure meson
       run: |
         meson setup builddir -Dpython.install_env=auto

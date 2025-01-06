@@ -16,7 +16,7 @@ on:
   
 jobs:
   macos:
-    name: ${{ matrix.os }} (clang) (${{matrix.library_type}})
+    name: ${{ matrix.os }} ${{ matrix.llvm }} (${{matrix.library_type}})
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
